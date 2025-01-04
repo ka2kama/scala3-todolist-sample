@@ -9,7 +9,7 @@ import org.http4s.ember.server.EmberServerBuilder
 import org.http4s.implicits.*
 import org.http4s.server.middleware.Logger
 
-object TodoListServer:
+object TodoListServer {
 
     def run[F[_] : Async : Network]: F[Nothing] = {
         for
@@ -21,21 +21,19 @@ object TodoListServer:
             // Can also be done via a Router if you
             // want to extract segments not checked
             // in the underlying routes.
-            httpApp = (
-                TodoListRoutes.routeRoutes <+>
+            httpApp = {
+                val routes = TodoListRoutes.routeRoutes <+>
                     TodoListRoutes.helloWorldRoutes[F](helloWorldAlg) <+>
                     TodoListRoutes.jokeRoutes[F](jokeAlg)
-                ).orNotFound
+
+                routes.orNotFound
+            }
 
             // With Middlewares in place
             finalHttpApp = Logger.httpApp(true, true)(httpApp)
 
-            _ <-
-                EmberServerBuilder
-                    .default[F]
-                    .withHost(ipv4"0.0.0.0")
-                    .withPort(port"8080")
-                    .withHttpApp(finalHttpApp)
-                    .build
+            _ <- EmberServerBuilder.default[F].withHost(ipv4"0.0.0.0").withPort(port"8080")
+                .withHttpApp(finalHttpApp).build
         yield ()
     }.useForever
+}
