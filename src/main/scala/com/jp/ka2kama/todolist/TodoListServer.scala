@@ -22,7 +22,8 @@ object TodoListServer:
             // want to extract segments not checked
             // in the underlying routes.
             httpApp = (
-                TodoListRoutes.helloWorldRoutes[F](helloWorldAlg) <+>
+                TodoListRoutes.routeRoutes <+>
+                    TodoListRoutes.helloWorldRoutes[F](helloWorldAlg) <+>
                     TodoListRoutes.jokeRoutes[F](jokeAlg)
                 ).orNotFound
 

@@ -30,7 +30,7 @@ object Jokes:
     private final case class JokeError(e: Throwable) extends RuntimeException
 
     def impl[F[_] : Concurrent](C: Client[F]): Jokes[F] = new Jokes[F]:
-        val dsl: Http4sClientDsl[F] = new Http4sClientDsl[F] {}
+        private val dsl = new Http4sClientDsl[F] {}
 
         import dsl.*
 
