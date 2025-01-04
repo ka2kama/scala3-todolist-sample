@@ -20,4 +20,5 @@ class HelloWorldSpec extends CatsEffectSuite {
     test("HelloWorld returns hello world message") {
         assertIO(retHelloWorld.flatMap(_.as[String]), "{\"message\":\"Hello, world\"}")
     }
+
 }

@@ -12,7 +12,7 @@ import org.http4s.server.middleware.Logger
 object TodoListServer {
 
     def run[F[_] : Async : Network]: F[Nothing] = {
-        for
+        for {
             client <- EmberClientBuilder.default[F].build
             helloWorldAlg = HelloWorld.impl[F]
             jokeAlg = Jokes.impl[F](client)
@@ -32,8 +32,13 @@ object TodoListServer {
             // With Middlewares in place
             finalHttpApp = Logger.httpApp(true, true)(httpApp)
 
-            _ <- EmberServerBuilder.default[F].withHost(ipv4"0.0.0.0").withPort(port"8080")
-                .withHttpApp(finalHttpApp).build
-        yield ()
+            _ <- EmberServerBuilder
+                .default[F]
+                .withHost(ipv4"0.0.0.0")
+                .withPort(port"8080")
+                .withHttpApp(finalHttpApp)
+                .build
+        } yield ()
     }.useForever
+
 }

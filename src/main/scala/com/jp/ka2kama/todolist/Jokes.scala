@@ -36,7 +36,11 @@ object Jokes {
 
         import dsl.*
 
-        def get: F[Jokes.Joke] = C.expect[Joke](GET(uri"https://icanhazdadjoke.com/"))
-            .adaptError { case t => JokeError(t) } // Prevent Client Json Decoding Failure Leaking
+        def get: F[Jokes.Joke] = C
+            .expect[Joke](GET(uri"https://icanhazdadjoke.com/"))
+            .adaptError {
+                case t => JokeError(t)
+            } // Prevent Client Json Decoding Failure Leaking
     }
+
 }

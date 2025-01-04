@@ -20,14 +20,16 @@ object HelloWorld {
     final case class Greeting(greeting: String) extends AnyVal
 
     private object Greeting {
-        given Encoder[Greeting] = { (a: Greeting) =>
-            Json.obj(("message", Json.fromString(a.greeting)))
+
+        given Encoder[Greeting] = {
+            (a: Greeting) => Json.obj(("message", Json.fromString(a.greeting)))
         }
 
         given [F[_]]: EntityEncoder[F, Greeting] = jsonEncoderOf[F, Greeting]
     }
 
-    def impl[F[_] : Applicative]: HelloWorld[F] = { (n: HelloWorld.Name) =>
-        Greeting("Hello, " + n.name).pure[F]
+    def impl[F[_] : Applicative]: HelloWorld[F] = {
+        (n: HelloWorld.Name) => Greeting("Hello, " + n.name).pure[F]
     }
+
 }

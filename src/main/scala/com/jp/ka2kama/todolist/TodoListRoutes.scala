@@ -8,6 +8,7 @@ import org.http4s.headers.*
 import org.http4s.syntax.all.*
 
 object TodoListRoutes {
+
     def routeRoutes[F[_] : Sync]: HttpRoutes[F] = {
         val dsl = new Http4sDsl[F] {}
         import dsl.*
@@ -24,7 +25,8 @@ object TodoListRoutes {
     def jokeRoutes[F[_] : Sync](J: Jokes[F]): HttpRoutes[F] = {
         val dsl = new Http4sDsl[F] {}
         import dsl.*
-        HttpRoutes.of[F] { case GET -> Root / "joke" =>
+        HttpRoutes.of[F] {
+            case GET -> Root / "joke" =>
             for
                 joke <- J.get
                 resp <- Ok(joke)
@@ -35,11 +37,13 @@ object TodoListRoutes {
     def helloWorldRoutes[F[_] : Sync](H: HelloWorld[F]): HttpRoutes[F] = {
         val dsl = new Http4sDsl[F] {}
         import dsl.*
-        HttpRoutes.of[F] { case GET -> Root / "hello" / name =>
+        HttpRoutes.of[F] {
+            case GET -> Root / "hello" / name =>
             for
                 greeting <- H.hello(HelloWorld.Name(name))
                 resp <- Ok(greeting)
             yield resp
         }
     }
+
 }
